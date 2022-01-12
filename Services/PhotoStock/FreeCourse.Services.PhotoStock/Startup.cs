@@ -34,7 +34,7 @@ namespace FreeCourse.Services.PhotoStock
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>// added
             {
                 options.Authority = Configuration["IdentityServerUrl"];
-                options.Audience = "photo_stock_catalog";
+                options.Audience = "resource_photo_stock";
                 options.RequireHttpsMetadata = false;
             });
             services.AddControllers();

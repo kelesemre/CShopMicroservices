@@ -6,11 +6,11 @@ using System.Text;
 
 namespace FreeCourse.Shared.Services
 {
-    public class SharedIdentityServer : ISharedIdentityService
+    public class SharedIdentityService : ISharedIdentityService
     {
         private IHttpContextAccessor _httpContextAccessor;
 
-        public SharedIdentityServer(IHttpContextAccessor httpContextAccessor)
+        public SharedIdentityService(IHttpContextAccessor httpContextAccessor)
         {
             _httpContextAccessor = httpContextAccessor;
         }

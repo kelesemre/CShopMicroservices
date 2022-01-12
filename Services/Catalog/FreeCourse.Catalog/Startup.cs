@@ -63,11 +63,9 @@ namespace FreeCourse.Services.Catalog
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "FreeCourse.Catalog v1"));
             }
-
             app.UseRouting();
             app.UseAuthentication();// added
             app.UseAuthorization();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

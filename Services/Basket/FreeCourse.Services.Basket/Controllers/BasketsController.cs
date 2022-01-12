@@ -23,20 +23,20 @@ namespace FreeCourse.Services.Basket.Controllers
             _basketService = basketService;
             _sharedIdentityService = sharedIdentityService;
         }
-
         [HttpGet]
         public async Task<IActionResult> GetBasket()
         {
+            //var claims = User.Claims;
             var response = await _basketService.GetBasket(_sharedIdentityService.GetUserId);
             return CreateActionResultInstance(response);
         }
-
         [HttpPost]
         public async Task<IActionResult> GetBasket(BasketDto basketDto)
         {
             var response = await _basketService.SaveOrUpdate(basketDto);
             return CreateActionResultInstance(response);
         }
+        [HttpDelete]
         public async Task<IActionResult> DeleteBasket()
         {
             var response = await _basketService.Delete(_sharedIdentityService.GetUserId);
