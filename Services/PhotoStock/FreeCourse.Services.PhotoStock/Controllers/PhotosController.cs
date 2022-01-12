@@ -17,9 +17,13 @@ namespace FreeCourse.Services.PhotoStock.Controllers
     public class PhotosController : CustomBaseController
     {
         /// <summary>
-        /// 
+        /// PhotoSave
         /// </summary>
-        public async Task<IActionResult> PhotoSave(IFormFile photo, CancellationToken cancellationToken) //this token triggers when user cancel the operation such as closing the browser and cancelling event 
+        /// <param name="photo"></param>
+        /// <param name="cancellationToken">this token triggers when user cancel the operation such as closing the browser and cancelling event </param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<IActionResult> PhotoSave(IFormFile photo, CancellationToken cancellationToken)
         {
             if (photo != null && photo.Length > 0)
             {
@@ -31,9 +35,21 @@ namespace FreeCourse.Services.PhotoStock.Controllers
                 }
                 var returnPath = "photos/" + photo.FileName;// http://www.photostock.api.com/photos/blablabla.jpeg
                 PhotoDto photoDto = new() { Url = returnPath };
-                return CreateActionResultInstance(Response<PhotoDto>.Success(200));
+                return CreateActionResultInstance(Response<PhotoDto>.Success(photoDto,200));
             }
             return CreateActionResultInstance(Response<PhotoDto>.Fail("empty content", 400));
+        }
+
+        public IActionResult PhotoDelete(string photoUrl)
+        {
+            var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/photos", photoUrl);
+            if (!System.IO.File.Exists(path))
+            {
+                return CreateActionResultInstance(Response<NoContent>.Fail("photo not found", 404));
+            }
+
+            System.IO.File.Delete(path);
+            return CreateActionResultInstance(Response<NoContent>.Success(204));
         }
     }
 }
