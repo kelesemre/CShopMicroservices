@@ -13,7 +13,9 @@ namespace FreeCourse.IdentityServer
     {
         public static IEnumerable<ApiResource> ApiResources => new ApiResource[] {
             new ApiResource("resource_catalog") {  Scopes={ "catalog_fullpermission" } }, // each ApiResource van have multiple Scopes
-            new ApiResource("photo_stock_catalog") {  Scopes={ "photo_stock_fullpermission" } }, // a scope can be shared different ApiResources
+            new ApiResource("resource_photo_stock") {  Scopes={ "photo_stock_fullpermission" } }, // a scope can be shared different ApiResources
+            new ApiResource("resource_basket") {  Scopes={ "basket_fullpermission" } }, 
+
             new ApiResource(IdentityServerConstants.LocalApi.ScopeName)  // identity nin kendine istek yapabilmesi için
         };
 
@@ -31,7 +33,7 @@ namespace FreeCourse.IdentityServer
                             Name="roles", // custom Resource named "roles"
                             DisplayName="Roles",
                             Description="Kullanıcı Rolleri",
-                            UserClaims= new []{"role" }
+                            UserClaims= new []{"role"}
                         }  //custom
                 };
         public static IEnumerable<ApiScope> ApiScopes =>
@@ -39,6 +41,7 @@ namespace FreeCourse.IdentityServer
             {
                 new ApiScope("catalog_fullpermission","Full permission for CATALOG API"), /// Api scope can have UserClaims 
                 new ApiScope("photo_stock_fullpermission","Full permission for PHOTO_STOCK API"),
+                new ApiScope("basket_fullpermission","Full permission for BASKET API"),
                 new ApiScope(IdentityServerConstants.LocalApi.ScopeName)
             };
         public static IEnumerable<Client> Clients =>
@@ -60,7 +63,9 @@ namespace FreeCourse.IdentityServer
                     ClientId="WebMvcClientForUser",
                     AllowOfflineAccess = true,
                     AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
-                    AllowedScopes= { IdentityServerConstants.StandardScopes.Email, // resource info which return to client
+                    AllowedScopes= {
+                                     "basket_fullpermission",
+                                     IdentityServerConstants.StandardScopes.Email, // resource info which return to client (returned token contains infos such as email,openId,profile and roles)
                                      IdentityServerConstants.StandardScopes.OpenId,//  Once the IdentityResource is defined, you can give access to it to a client via the AllowedScopes option
                                      IdentityServerConstants.StandardScopes.Profile,
                                      IdentityServerConstants.StandardScopes.OfflineAccess,
