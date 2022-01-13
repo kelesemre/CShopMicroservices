@@ -49,9 +49,9 @@ namespace FreeCourse.Services.Basket
             {
                 options.Filters.Add(new AuthorizeFilter(requireAuthorizePolicy)); // adding whole controller Authenticated user globally
             });
-            services.AddSingleton<RedisService>(sp =>
+            services.AddSingleton<RedisService>(sp => // single instance
             {
-                var redisSettings = sp.GetRequiredService<IOptions<RedisSettings>>().Value;
+                var redisSettings = sp.GetRequiredService<IOptions<RedisSettings>>().Value;//read from configuration and build up a Redis instance
                 var redis = new RedisService(redisSettings.Host, redisSettings.Port);
                 redis.Connect();
                 return redis;
