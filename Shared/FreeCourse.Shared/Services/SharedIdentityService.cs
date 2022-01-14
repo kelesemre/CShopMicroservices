@@ -8,7 +8,7 @@ namespace FreeCourse.Shared.Services
 {
     public class SharedIdentityService : ISharedIdentityService
     {
-        private IHttpContextAccessor _httpContextAccessor;
+        private IHttpContextAccessor _httpContextAccessor; // to access request token detail 
 
         public SharedIdentityService(IHttpContextAccessor httpContextAccessor)
         {

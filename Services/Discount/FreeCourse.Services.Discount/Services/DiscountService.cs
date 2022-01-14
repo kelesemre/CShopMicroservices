@@ -36,7 +36,7 @@ namespace FreeCourse.Services.Discount.Services
 
         public async Task<Response<Models.Discount>> GetByCodeAndUserId(string code, string userId)
         {
-            var discounts = await _dbConnection.QueryAsync<Models.Discount>("select * from discount where code=@Code, userId = @UserId", new { Code = code, UserId = userId });
+            var discounts = await _dbConnection.QueryAsync<Models.Discount>("select * from discount where code=@Code AND userId = @UserId", new { Code = code, UserId = userId });
             var hasDiscount = discounts.FirstOrDefault();
             if (hasDiscount == null)
             {
