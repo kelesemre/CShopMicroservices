@@ -14,3 +14,8 @@ CreatedDate timestamp not null default CURRENT_TIMESTAMP
     "PostgreSql": "User ID=admin;Password=Password12*;Server=localhost;Port=5432;Database=discountdb;Integrated Securit=true;Pooling=true"
   }
 --------------------------------
+Owned Entity Type
+Navigation Property
+Shadow Property
+Backing Fields
+Expression-bodied property
