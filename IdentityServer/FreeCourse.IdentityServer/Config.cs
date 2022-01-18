@@ -16,6 +16,8 @@ namespace FreeCourse.IdentityServer
             new ApiResource("resource_photo_stock") {  Scopes={ "photo_stock_fullpermission" } }, // a scope can be shared different ApiResources
             new ApiResource("resource_basket") {  Scopes={ "basket_fullpermission" } },
             new ApiResource("resource_discount") {  Scopes={ "discount_fullpermission" } },
+            new ApiResource("resource_order") {  Scopes={ "order_fullpermission" } },
+
             new ApiResource(IdentityServerConstants.LocalApi.ScopeName)  // identity nin kendine istek yapabilmesi için
         };
 
@@ -43,6 +45,8 @@ namespace FreeCourse.IdentityServer
                 new ApiScope("photo_stock_fullpermission","Full permission for PHOTO_STOCK API"),
                 new ApiScope("basket_fullpermission","Full permission for BASKET API"),
                 new ApiScope("discount_fullpermission","Full permission for DISCOUNT API"),
+                new ApiScope("order_fullpermission","Full permission for ORDER API"),
+
                 new ApiScope(IdentityServerConstants.LocalApi.ScopeName)
             };
         public static IEnumerable<Client> Clients =>
@@ -67,6 +71,7 @@ namespace FreeCourse.IdentityServer
                     AllowedScopes= {
                                      "basket_fullpermission",
                                      "discount_fullpermission",
+                                     "order_fullpermission",
                                      IdentityServerConstants.StandardScopes.Email, // resource info which return to client (returned token contains infos such as email,openId,profile and roles)
                                      IdentityServerConstants.StandardScopes.OpenId,//  Once the IdentityResource is defined, you can give access to it to a client via the AllowedScopes option
                                      IdentityServerConstants.StandardScopes.Profile,

@@ -21,6 +21,10 @@ namespace FreeCourse.Services.Order.Domain.OrderAggregate
                 return _orderItems;
             }
         }
+        public Order()
+        {
+
+        }
 
         public Order(string buyerId, Address address)
         {
