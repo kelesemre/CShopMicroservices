@@ -31,7 +31,7 @@ namespace FreeCourse.Services.PhotoStock.Controllers
 
                 using (var stream = new FileStream(path, FileMode.Create))
                 {
-                    await photo.CopyToAsync(stream, cancellationToken);
+                    await photo.CopyToAsync(stream, cancellationToken);//this token triggers when user cancel the operation such as closing the browser and cancelling event
                 }
                 var returnPath = "photos/" + photo.FileName;// http://www.photostock.api.com/photos/blablabla.jpeg
                 PhotoDto photoDto = new() { Url = returnPath };
