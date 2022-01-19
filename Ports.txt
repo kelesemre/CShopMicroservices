@@ -4,6 +4,8 @@ Services
 	-BasketAPI => 5013
 	-DiscountAPI => 5014
 	-BasketAPI => 5015
+	-DummPaymentAPI => 5016
+
 
 
 -identityserver => 5001
