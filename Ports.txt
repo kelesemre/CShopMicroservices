@@ -8,4 +8,5 @@ Services
 
 
 
--identityserver => 5001
+-Identityserver => 5001
+-Gateway => 500

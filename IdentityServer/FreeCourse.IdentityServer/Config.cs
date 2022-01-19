@@ -18,6 +18,8 @@ namespace FreeCourse.IdentityServer
             new ApiResource("resource_discount") {  Scopes={ "discount_fullpermission" } },
             new ApiResource("resource_order") {  Scopes={ "order_fullpermission" } },
             new ApiResource("resource_payment") {  Scopes={ "payment_fullpermission" } },
+            new ApiResource("resource_gateway") {  Scopes={ "gateway_fullpermission" } },
+
 
 
             new ApiResource(IdentityServerConstants.LocalApi.ScopeName)  // identity nin kendine istek yapabilmesi için
@@ -49,6 +51,8 @@ namespace FreeCourse.IdentityServer
                 new ApiScope("discount_fullpermission","Full permission for DISCOUNT API"),
                 new ApiScope("order_fullpermission","Full permission for ORDER API"),
                 new ApiScope("payment_fullpermission","Full permission for PAYMENT API"),
+                new ApiScope("gateway_fullpermission","Full permission for Gateway"),
+
 
 
                 new ApiScope(IdentityServerConstants.LocalApi.ScopeName)
@@ -62,10 +66,10 @@ namespace FreeCourse.IdentityServer
                     ClientSecrets= { new Secret("secret".Sha256()) },
                     ClientId="WebMvcClient",
                     AllowedGrantTypes = GrantTypes.ClientCredentials, // This grand types do not support to refresh token
-                    AllowedScopes= { "catalog_fullpermission", "photo_stock_fullpermission", IdentityServerConstants.LocalApi.ScopeName }// alloweed scopes.
+                    AllowedScopes= { "catalog_fullpermission", "photo_stock_fullpermission", "gateway_fullpermission", IdentityServerConstants.LocalApi.ScopeName }// alloweed scopes.
                 },
 
-                new Client 
+                new Client
                 {
                     ClientName="ASP.Net Core MVC",
                     ClientSecrets= { new Secret("secret".Sha256()) },
@@ -77,6 +81,7 @@ namespace FreeCourse.IdentityServer
                                      "discount_fullpermission",
                                      "order_fullpermission",
                                      "payment_fullpermission",
+                                     "gateway_fullpermission",
                                      IdentityServerConstants.StandardScopes.Email, // resource info which return to client (returned token contains infos such as email,openId,profile and roles)
                                      IdentityServerConstants.StandardScopes.OpenId,//  Once the IdentityResource is defined, you can give access to it to a client via the AllowedScopes option
                                      IdentityServerConstants.StandardScopes.Profile,
