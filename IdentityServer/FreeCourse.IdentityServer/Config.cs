@@ -9,6 +9,9 @@ using System.Collections.Generic;
 
 namespace FreeCourse.IdentityServer
 {
+    /// <summary>
+    /// TO-DO These infos can be read from a specific db
+    /// </summary>
     public static class Config
     {
         public static IEnumerable<ApiResource> ApiResources => new ApiResource[] {

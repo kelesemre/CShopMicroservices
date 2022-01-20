@@ -1,4 +1,5 @@
-﻿using FreeCourse.IdentityServer.Dtos;
+﻿
+using FreeCourse.IdentityServer.Dtos;
 using FreeCourse.IdentityServer.Models;
 using FreeCourse.Shared.Dtos;
 using Microsoft.AspNetCore.Authorization;
@@ -25,11 +26,6 @@ namespace FreeCourse.IdentityServer.Controllers
         {
             _userManager = userManager;
         }
-        /// <summary>
-        /// Sign a user to IDS
-        /// </summary>
-        /// <param name="signupDto"></param>
-        /// <returns></returns>
         [HttpPost]
         public async Task<IActionResult> SignUp(SignupDto signupDto)
         {
@@ -42,7 +38,7 @@ namespace FreeCourse.IdentityServer.Controllers
             var result = await _userManager.CreateAsync(user, signupDto.Password);
             if (!result.Succeeded)
             {
-                return BadRequest(Response<NoContent>.Fail(result.Errors.Select(x => x.Description).ToList(), 400));
+                return BadRequest(Response<NoContent>.Fail(result.Errors.Select(x => x.Description).ToList(), 400));// TO-DO , change with Generic ActionResult 
             }
             return NoContent();
         }
