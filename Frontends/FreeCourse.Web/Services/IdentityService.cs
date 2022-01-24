@@ -2,12 +2,18 @@
 using FreeCourse.Web.Models;
 using FreeCourse.Web.Services.Interfaces;
 using IdentityModel.Client;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net.Http;
+using System.Security.Claims;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace FreeCourse.Web.Services
@@ -40,7 +46,9 @@ namespace FreeCourse.Web.Services
         public async Task<Response<bool>> SignIn(SigninInput signinInput)
         {
             /* 1-) reach to discovery endpoint
-             * 
+             * 2-) Get token info (passwordTokenRequest)
+             * 3-) Request to  Userendpoint to get user claim infos
+             * 4-) Save cookie
              */
 
             var disco = await _httpClient.GetDiscoveryDocumentAsync(new DiscoveryDocumentRequest
@@ -65,8 +73,32 @@ namespace FreeCourse.Web.Services
             var token = await _httpClient.RequestPasswordTokenAsync(passwordTokenRequest);
             if (token.IsError)
             {
-
+                var responseContent = await token.HttpResponse.Content.ReadAsStringAsync();
+                var errorDto = JsonSerializer.Deserialize<ErrorDto>(responseContent, new JsonSerializerOptions { PropertyNameCaseInsensitive = true }); // as of 3.1, no needed to Newtonsosft library.
+                return Response<bool>.Fail(errorDto.Errors, 400);
             }
+            var userInfoRequest = new UserInfoRequest()
+            {
+                Token = token.AccessToken,
+                Address = disco.UserInfoEndpoint
+            };
+            var userInfo = await _httpClient.GetUserInfoAsync(userInfoRequest);
+            if (userInfo.IsError)
+            {
+                throw userInfo.Exception; //TOXDO Logging
+            }
+            ClaimsIdentity claimsIdentity = new ClaimsIdentity(userInfo.Claims, CookieAuthenticationDefaults.AuthenticationScheme, "name", "role"); //state where system get name and role values from in the token.It may custom values.xyzRole etc..
+            ClaimsPrincipal claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+            var authenticationProperties = new AuthenticationProperties();
+            authenticationProperties.StoreTokens(new List<AuthenticationToken>()
+            {
+                new AuthenticationToken { Name = OpenIdConnectParameterNames.AccessToken, Value = token.AccessToken },// accessToken
+                new AuthenticationToken { Name = OpenIdConnectParameterNames.RefreshToken, Value = token.RefreshToken },// refreshToken
+                new AuthenticationToken { Name = OpenIdConnectParameterNames.ExpiresIn, Value = DateTime.Now.AddSeconds(token.ExpiresIn).ToString("o", CultureInfo.InvariantCulture) },// expire calculations
+            });
+
+            authenticationProperties.IsPersistent = signinInput.IsRemember; // persistent cookie if the values is true
+            
             throw new NotImplementedException();
         }
     }
