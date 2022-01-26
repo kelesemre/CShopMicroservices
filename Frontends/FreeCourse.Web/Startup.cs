@@ -1,4 +1,10 @@
+using FreeCourse.Shared.Services;
+using FreeCourse.Web.Extensions;
+using FreeCourse.Web.Handler;
 using FreeCourse.Web.Models;
+using FreeCourse.Web.Services;
+using FreeCourse.Web.Services.Interfaces;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -23,9 +29,22 @@ namespace FreeCourse.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.Configure<ServiceApiSettings>(Configuration.GetSection("ServiceApiSettings"));
             services.Configure<ClientSettings>(Configuration.GetSection("ClientSettings"));
+            services.Configure<ServiceApiSettings>(Configuration.GetSection("ServiceApiSettings"));
+            services.AddHttpContextAccessor();
+            services.AddAccessTokenManagement();
+            services.AddScoped<ISharedIdentityService, SharedIdentityService>();
 
+            services.AddScoped<ResourceOwnerPasswordTokenHandler>();
+
+            services.AddHttpClientServices(Configuration);
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, opts =>
+            {
+                opts.LoginPath = "/Auth/SignIn";
+                opts.ExpireTimeSpan = TimeSpan.FromDays(60);
+                opts.SlidingExpiration = true;
+                opts.Cookie.Name = "cshopwebcookie";
+            });
             services.AddControllersWithViews();
         }
 
@@ -45,7 +64,7 @@ namespace FreeCourse.Web
             app.UseRouting();
 
             app.UseAuthorization();
-
+            app.UseAuthentication();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
