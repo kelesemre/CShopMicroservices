@@ -33,14 +33,71 @@ namespace FreeCourse.Web.Services
             _serviceApiSettings = serviceApiSettings.Value; // It can be also read the value
         }
 
-        public Task<TokenResponse> GetAccessTokenByRefreshToken()
+        public async Task<TokenResponse> GetAccessTokenByRefreshToken()
         {
-            throw new NotImplementedException();
+            var disco = await _httpClient.GetDiscoveryDocumentAsync(new DiscoveryDocumentRequest
+            {
+                Address = _serviceApiSettings.IdentityBaseUri,
+                Policy = new DiscoveryPolicy { RequireHttps = false }
+            });
+
+            if (disco.IsError)
+            {
+                throw disco.Exception;
+            }
+            var refreshToken = await _httpContextAccessor.HttpContext.GetTokenAsync(OpenIdConnectParameterNames.RefreshToken);// first,get refresh token from available cookie.
+
+            RefreshTokenRequest refreshTokenRequest = new()
+            {
+                ClientId = _clientSettings.WebClientForUser.ClientId,
+                ClientSecret = _clientSettings.WebClientForUser.ClientSecret,
+                RefreshToken = refreshToken,
+                Address = disco.TokenEndpoint
+            };
+            var token = await _httpClient.RequestRefreshTokenAsync(refreshTokenRequest); // get main token
+            if (token.IsError)
+            {
+                return null;
+            }
+            var authenticationTokens = new List<AuthenticationToken>() // set new token 
+            {
+                new AuthenticationToken{ Name=OpenIdConnectParameterNames.AccessToken,Value=token.AccessToken},
+                new AuthenticationToken{ Name=OpenIdConnectParameterNames.RefreshToken,Value=token.RefreshToken},
+                new AuthenticationToken{ Name=OpenIdConnectParameterNames.ExpiresIn,Value= DateTime.Now.AddSeconds(token.ExpiresIn).ToString("o",CultureInfo.InvariantCulture)}
+            };
+
+            var authenticationResult = await _httpContextAccessor.HttpContext.AuthenticateAsync();
+
+            var properties = authenticationResult.Properties;
+            properties.StoreTokens(authenticationTokens); // update cookie
+
+            await _httpContextAccessor.HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, authenticationResult.Principal, properties);
+
+            return token;
         }
 
-        public Task RevokeRefreshToken()
+        public async Task RevokeRefreshToken()
         {
-            throw new NotImplementedException();
+            var disco = await _httpClient.GetDiscoveryDocumentAsync(new DiscoveryDocumentRequest
+            {
+                Address = _serviceApiSettings.IdentityBaseUri,
+                Policy = new DiscoveryPolicy { RequireHttps = false }
+            });
+
+            if (disco.IsError)
+            {
+                throw disco.Exception;
+            }
+            var refreshToken = await _httpContextAccessor.HttpContext.GetTokenAsync(OpenIdConnectParameterNames.RefreshToken);
+            TokenRevocationRequest tokenRevocationRequest = new()
+            {
+                ClientId = _clientSettings.WebClientForUser.ClientId,
+                ClientSecret = _clientSettings.WebClientForUser.ClientSecret,
+                Address = disco.RevocationEndpoint,
+                Token = refreshToken,
+                TokenTypeHint = "refresh_token"
+            };
+            await _httpClient.RevokeTokenAsync(tokenRevocationRequest);
         }
 
         public async Task<Response<bool>> SignIn(SigninInput signinInput)
@@ -48,12 +105,12 @@ namespace FreeCourse.Web.Services
             /* 1-) reach to discovery endpoint
              * 2-) Get token info (passwordTokenRequest)
              * 3-) Request to  Userendpoint to get user claim infos
-             * 4-) Save cookie
+             * 4-) Sign In
              */
 
             var disco = await _httpClient.GetDiscoveryDocumentAsync(new DiscoveryDocumentRequest
             {
-                Address = _serviceApiSettings.BaseUrl,
+                Address = _serviceApiSettings.IdentityBaseUri,
                 Policy = new DiscoveryPolicy { RequireHttps = false }
             });
 
@@ -66,7 +123,8 @@ namespace FreeCourse.Web.Services
             {
                 ClientId = _clientSettings.WebClientForUser.ClientId,
                 ClientSecret = _clientSettings.WebClientForUser.ClientSecret,
-                UserName = signinInput.Password,
+                UserName = signinInput.Email,
+                Password = signinInput.Password,
                 Address = disco.TokenEndpoint
             }; //grandType = password
 
@@ -82,7 +140,7 @@ namespace FreeCourse.Web.Services
                 Token = token.AccessToken,
                 Address = disco.UserInfoEndpoint
             };
-            var userInfo = await _httpClient.GetUserInfoAsync(userInfoRequest);
+            var userInfo = await _httpClient.GetUserInfoAsync(userInfoRequest);//userInfo endpoint IDS
             if (userInfo.IsError)
             {
                 throw userInfo.Exception; //TOXDO Logging
@@ -98,8 +156,8 @@ namespace FreeCourse.Web.Services
             });
 
             authenticationProperties.IsPersistent = signinInput.IsRemember; // persistent cookie if the values is true
-            
-            throw new NotImplementedException();
+            await _httpContextAccessor.HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal, authenticationProperties);
+            return Response<bool>.Success(200);
         }
     }
 }

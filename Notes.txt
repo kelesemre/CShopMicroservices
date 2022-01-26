@@ -19,3 +19,8 @@ Navigation Property
 Shadow Property
 Backing Fields
 Expression-bodied property
+--------------------------------
+system read scope section in the token. 
+After that, with this information that in the scope, system request to some claims according to scopes.
+userEndPoint method is called during this process.
+--------------------------------
