@@ -1,5 +1,7 @@
 using FreeCourse.Shared.Services;
 using FreeCourse.Web.Extensions;
+//using FreeCourse.Shared.Services;
+//using FreeCourse.Web.Extensions;
 using FreeCourse.Web.Handler;
 using FreeCourse.Web.Models;
 using FreeCourse.Web.Services;
@@ -32,10 +34,10 @@ namespace FreeCourse.Web
             services.Configure<ClientSettings>(Configuration.GetSection("ClientSettings"));
             services.Configure<ServiceApiSettings>(Configuration.GetSection("ServiceApiSettings"));
             services.AddHttpContextAccessor();
+            services.AddScoped<ResourceOwnerPasswordTokenHandler>();
             services.AddAccessTokenManagement();
             services.AddScoped<ISharedIdentityService, SharedIdentityService>();
 
-            services.AddScoped<ResourceOwnerPasswordTokenHandler>();
 
             services.AddHttpClientServices(Configuration);
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, opts =>
@@ -63,8 +65,8 @@ namespace FreeCourse.Web
 
             app.UseRouting();
 
-            app.UseAuthorization();
             app.UseAuthentication();
+            app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
