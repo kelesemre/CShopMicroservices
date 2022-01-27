@@ -8,7 +8,7 @@ namespace FreeCourse.Web.Models
     public class UserViewModel
     {
         public string UserName { get; set; }
-        public int Id { get; set; }
+        public string Id { get; set; }
         public string Email { get; set; }
         public string City { get; set; }
 

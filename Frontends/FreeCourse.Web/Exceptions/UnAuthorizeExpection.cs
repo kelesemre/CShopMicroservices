@@ -10,6 +10,7 @@ namespace FreeCourse.Web.Exceptions
     {
         public UnAuthorizeExpection() : base()
         {
+
         }
 
         public UnAuthorizeExpection(string message) : base(message)
@@ -18,7 +19,7 @@ namespace FreeCourse.Web.Exceptions
 
         public UnAuthorizeExpection(string message, Exception innerException) : base(message, innerException)
         {
-        }
 
+        }
     }
 }
