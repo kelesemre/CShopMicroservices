@@ -16,8 +16,11 @@ namespace FreeCourse.Web.Extensions
         public static void AddHttpClientServices(this IServiceCollection services, IConfiguration Configuration)
         {
             var serviceApiSettings = Configuration.GetSection("ServiceApiSettings").Get<ServiceApiSettings>();
-            //services.AddHttpClient<IClientCredentialTokenService, ClientCredentialTokenService>();
             services.AddHttpClient<IIdentityService, IdentityService>();
+            services.AddHttpClient<ICatalogService, CatalogService>(op =>
+            {
+                op.BaseAddress = new Uri($"{serviceApiSettings.GatewayBaseUri}/{serviceApiSettings.Catalog.Path}");
+            });
 
             services.AddHttpClient<IUserService, UserService>(opt =>
             {
