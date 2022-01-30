@@ -6,11 +6,8 @@ using System.Threading.Tasks;
 
 namespace FreeCourse.Web.Services.Interfaces
 {
-    public class IClientCredentialTokenService : Controller
+    public interface IClientCredentialTokenService 
     {
-        public IActionResult Index()
-        {
-            return View();
-        }
+        Task<String> GetToken();
     }
 }

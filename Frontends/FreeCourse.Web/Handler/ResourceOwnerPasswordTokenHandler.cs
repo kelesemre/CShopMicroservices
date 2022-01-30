@@ -43,7 +43,7 @@ namespace FreeCourse.Web.Handler
             }
             if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)// since response will be filled avobe, status code must be check again.
             {
-                throw new UnAuthorizeExpection();
+                throw new UnAuthorizeException();
             }
             return response;
         }

@@ -6,18 +6,18 @@ using System.Threading.Tasks;
 
 namespace FreeCourse.Web.Exceptions
 {
-    public class UnAuthorizeExpection : Exception
+    public class UnAuthorizeException : Exception
     {
-        public UnAuthorizeExpection() : base()
+        public UnAuthorizeException() : base()
         {
 
         }
 
-        public UnAuthorizeExpection(string message) : base(message)
+        public UnAuthorizeException(string message) : base(message)
         {
         }
 
-        public UnAuthorizeExpection(string message, Exception innerException) : base(message, innerException)
+        public UnAuthorizeException(string message, Exception innerException) : base(message, innerException)
         {
 
         }
