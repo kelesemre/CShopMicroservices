@@ -17,10 +17,11 @@ namespace FreeCourse.Web.Extensions
         {
             var serviceApiSettings = Configuration.GetSection("ServiceApiSettings").Get<ServiceApiSettings>();
             services.AddHttpClient<IIdentityService, IdentityService>();
+            services.AddHttpClient<IClientCredentialTokenService, ClientCredentialTokenService>();
             services.AddHttpClient<ICatalogService, CatalogService>(op =>
             {
                 op.BaseAddress = new Uri($"{serviceApiSettings.GatewayBaseUri}/{serviceApiSettings.Catalog.Path}");
-            });
+            }).AddHttpMessageHandler<ClientCredentialTokenHandler>();
 
             services.AddHttpClient<IUserService, UserService>(opt =>
             {
