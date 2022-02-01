@@ -8,12 +8,12 @@ namespace FreeCourse.Shared.Dtos
     public class Response<T>
     {
         [JsonIgnore]
-        public int StatusCode { get; private set; }
+        public int StatusCode { get; set; }
 
-        public T Data { get; private set; } // if success return Data prop
+        public T Data { get; set; } // if success return Data prop
 
         [JsonIgnore]
-        public bool IsSuccessful { get; private set; }
+        public bool IsSuccessful { get; set; }
 
         public List<string> Errors { get; set; } //if operation is fail then fill the list collection
 
@@ -38,7 +38,7 @@ namespace FreeCourse.Shared.Dtos
 
         public static Response<T> Fail(string error, int statusCode)
         {
-            return new Response<T> { StatusCode = statusCode, IsSuccessful = false, Errors = new List<string>() { error  } };
+            return new Response<T> { StatusCode = statusCode, IsSuccessful = false, Errors = new List<string>() { error } };
         }
     }
 }
