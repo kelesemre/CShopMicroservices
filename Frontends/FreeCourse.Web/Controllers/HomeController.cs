@@ -1,4 +1,6 @@
-﻿using FreeCourse.Web.Models;
+﻿using FreeCourse.Web.Exceptions;
+using FreeCourse.Web.Models;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -31,6 +33,11 @@ namespace FreeCourse.Web.Controllers
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
+            var errorFeature = HttpContext.Features.Get<IExceptionHandlerFeature>();
+            if (errorFeature!= null && errorFeature.Error is UnAuthorizeException) // detect custom error.
+            {
+                return RedirectToAction(nameof(AuthController.LogOut), "Auth");// go authController login method after that redirect to home page.
+            }
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
