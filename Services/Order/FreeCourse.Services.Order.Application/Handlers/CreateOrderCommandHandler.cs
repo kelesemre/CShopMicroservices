@@ -29,7 +29,6 @@ namespace FreeCourse.Services.Order.Application.Handlers
             Domain.OrderAggregate.Order order = new Domain.OrderAggregate.Order(request.BuyerId, newAddress);
             request.OrderItems.ForEach(x =>
             {
-
                 order.AddOrderItem(x.ProductId, x.ProductName, x.PictureUrl, x.Price);
             });
             await _context.AddAsync(order);

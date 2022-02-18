@@ -1,5 +1,7 @@
+using FreeCourse.Services.Order.Application.Consumer;
 using FreeCourse.Services.Order.Infrastructure;
 using FreeCourse.Shared.Services;
+using MassTransit;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -33,6 +35,25 @@ namespace FreeCourse.Services.Order.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //MassTransit configuration
+            // default port : 5672
+            services.AddMassTransit(x =>
+            {
+                x.AddConsumer<CreateOrderMessageCommandConsumer>();
+                x.UsingRabbitMq((context, cfg) =>
+                {
+                    cfg.Host(Configuration["RabbitMQUrl"], "/", host =>
+                    {
+                        host.Username("guest");
+                        host.Password("guest");
+                    });
+                    cfg.ReceiveEndpoint("create-order-service", e =>//specify the queueName
+                    {
+                        e.ConfigureConsumer<CreateOrderMessageCommandConsumer>(context);
+                    });
+                });
+            });
+            services.AddMassTransitHostedService();
             var requireAuthorizePolicy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Remove("sub"); // by doing this overrride default prefix... final output would be {"sub":"sdfdfsd-sdfsdf-erfgbvf-3434"}
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>// added
@@ -45,7 +66,7 @@ namespace FreeCourse.Services.Order.API
             services.AddMediatR(typeof(FreeCourse.Services.Order.Application.Handlers.CreateOrderCommandHandler).Assembly);// pass assembly which mediatR handles class' belong to
             services.AddHttpContextAccessor();
             services.AddScoped<ISharedIdentityService, SharedIdentityService>();
-            
+
             services.AddDbContext<OrderDbContext>(opt =>
             {
                 opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), configure =>
