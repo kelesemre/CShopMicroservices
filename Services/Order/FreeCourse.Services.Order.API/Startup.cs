@@ -40,6 +40,7 @@ namespace FreeCourse.Services.Order.API
             services.AddMassTransit(x =>
             {
                 x.AddConsumer<CreateOrderMessageCommandConsumer>();
+                x.AddConsumer<CourseNameChangedEventConsumer>();
                 x.UsingRabbitMq((context, cfg) =>
                 {
                     cfg.Host(Configuration["RabbitMQUrl"], "/", host =>
@@ -50,6 +51,10 @@ namespace FreeCourse.Services.Order.API
                     cfg.ReceiveEndpoint("create-order-service", e =>//specify the queueName
                     {
                         e.ConfigureConsumer<CreateOrderMessageCommandConsumer>(context);
+                    });
+                    cfg.ReceiveEndpoint("courseName-name-change-event-order-service", e =>//specify the queueName
+                    {
+                        e.ConfigureConsumer<CourseNameChangedEventConsumer>(context);
                     });
                 });
             });

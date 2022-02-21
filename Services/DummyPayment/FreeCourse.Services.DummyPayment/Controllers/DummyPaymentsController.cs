@@ -26,7 +26,7 @@ namespace FreeCourse.Services.DummyPayment.Controllers
         [HttpPost]
         public async Task<IActionResult> ReceivePayment(PaymentDto paymentDto)
         {
-            var sendEndPoint = await _sendEndpointProvider.GetSendEndpoint(new Uri("queue:create-order-service"));
+            var sendEndPoint = await _sendEndpointProvider.GetSendEndpoint(new Uri("queue:create-order-service")); //MassTransit sending...
             var createOrderMessageCommand = new CreateOrderMessageCommand();
             createOrderMessageCommand.BuyerId = paymentDto.Order.BuyerId;
             createOrderMessageCommand.Province = paymentDto.Order.Address.Province;
