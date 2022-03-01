@@ -58,7 +58,7 @@ namespace FreeCourse.IdentityServer
             // not recommended for production - you need to store your key material somewhere secure
 
             builder.AddResourceOwnerValidator<IdentityResourceOwnerPasswordValidator>(); // Custom 
-            builder.AddExtensionGrantValidator<TokenExchangeExtensionGrantValidator>(); // Custom 
+            builder.AddExtensionGrantValidator<TokenExchangeExtensionGrantValidator>();
 
 
 
