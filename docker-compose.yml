@@ -37,6 +37,21 @@ services:
     build:
       context: .
       dockerfile: Services/Discount/FreeCourse.Services.Discount/Dockerfile
+  dummypayment.api:
+    image: dummypayment_api_image
+    build:
+      context: .
+      dockerfile: Services/DummyPayment/FreeCourse.Services.DummyPayment/Dockerfile
+  order.api:
+    image: order_api_image
+    build:
+      context: .
+      dockerfile: Services/Order/FreeCourse.Services.Order.API/Dockerfile
+  gateway.api:
+    image: gateway_api_image
+    build:
+      context: .
+      dockerfile: Gateways/FreeCourse.Gateway/Dockerfile
 volumes:
   catalogdb_volume:
   discountdb_volume:
