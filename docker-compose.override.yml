@@ -102,3 +102,30 @@ services:
       - "5014:80"
     depends_on:
       - discountdb
+  dummypayment.api:
+    container_name: dummypayment.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - RabbitMQUrl=rabbitmq
+      - IdentityServerURL=http://identityserver.api
+    ports:
+      - "5016:80"
+  order.api:
+    container_name: order.api
+    restart: on-failure
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - IdentityServerURL=http://identityserver.api
+      - RabbitMQUrl=rabbitmq
+      - "ConnectionStrings:DefaultConnection=Server=orderdb,1444;Database=orderdb;User=sa;Password=Password12*"
+    ports:
+      - "5015:80"
+    depends_on:
+      - orderdb
+  gateway.api:
+    container_name: gateway.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - IdentityServerURL=http://identityserver.api
+    ports:
+      - "5000:80"
