@@ -11,6 +11,9 @@ using System.Threading.Tasks;
 
 namespace FreeCourse.Web.Services
 {
+    /// <summary>
+    /// ClientCredental Token için Token çeker. Catalogları çekmek için catalog MS ine giderken gerekli olan client credental biglierini bu servis ile alırız.
+    /// </summary>
     public class ClientCredentialTokenService : IClientCredentialTokenService
     {
         private readonly ServiceApiSettings _serviceApiSettings;

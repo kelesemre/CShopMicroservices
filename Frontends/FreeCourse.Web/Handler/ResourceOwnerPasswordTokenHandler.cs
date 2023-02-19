@@ -25,7 +25,12 @@ namespace FreeCourse.Web.Handler
             _identityService = identityService;
             _logger = logger;
         }
-
+        /// <summary>
+        /// İstekte araya girecek, 401 dönerse refresh token ile almaya calıs yoksa da 401 i dön nihai olarak.
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         protected async override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             var accessToken = await _httpContextAccessor.HttpContext.GetTokenAsync(OpenIdConnectParameterNames.AccessToken);// access token is read from in the cookie

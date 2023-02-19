@@ -23,8 +23,6 @@ namespace FreeCourse.Gateway
             Configuration = configuration;
         }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
-        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddHttpClient<TokenExchangeDelegateHandler>();// httpclient is used for TokenExchangeDelegateHandler class.
@@ -33,7 +31,6 @@ namespace FreeCourse.Gateway
                 options.Audience = "resource_gateway";
                 options.RequireHttpsMetadata = false;
             });
-            //resource_gateway
             services.AddOcelot().AddDelegatingHandler<TokenExchangeDelegateHandler>();
         }
 

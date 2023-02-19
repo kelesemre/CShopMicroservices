@@ -3,11 +3,8 @@ using FreeCourse.IdentityServer.Dtos;
 using FreeCourse.IdentityServer.Models;
 using FreeCourse.Shared.Dtos;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,7 +12,7 @@ using static IdentityServer4.IdentityServerConstants;
 
 namespace FreeCourse.IdentityServer.Controllers
 {
-    [Authorize(LocalApi.AuthenticationScheme)] // startup policy
+    [Authorize(LocalApi.AuthenticationScheme)] // startup policy   --> Buradaki Authorization attribute ile rastgele her kişinin Bu controller altındaki metodları cagırmaması gerekiyor.
     [Route("api/[controller]/[action]")]
     [ApiController]
     public class UserController : ControllerBase

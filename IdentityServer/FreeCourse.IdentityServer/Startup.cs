@@ -29,7 +29,7 @@ namespace FreeCourse.IdentityServer
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddLocalApiAuthentication();
+            services.AddLocalApiAuthentication();// Burada, lokal olarak ids üzerindeki endpointleri korumak istediğimizi belirtiyoruz. UserControllerda bu atrribute ı ekliyoruz zaten.
             services.AddControllersWithViews();
 
             services.AddDbContext<ApplicationDbContext>(options =>
@@ -51,7 +51,7 @@ namespace FreeCourse.IdentityServer
                 options.EmitStaticAudienceClaim = true;
             })
                 .AddInMemoryIdentityResources(Config.IdentityResources)
-                .AddInMemoryApiResources(Config.ApiResources)
+                .AddInMemoryApiResources(Config.ApiResources)//
                 .AddInMemoryApiScopes(Config.ApiScopes)
                 .AddInMemoryClients(Config.Clients)
                 .AddAspNetIdentity<ApplicationUser>();
@@ -63,7 +63,7 @@ namespace FreeCourse.IdentityServer
 
 
             builder.AddDeveloperSigningCredential();
-            
+
             services.AddAuthentication()
                 .AddGoogle(options =>
                 {

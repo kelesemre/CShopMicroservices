@@ -5,8 +5,6 @@ using FreeCourse.Web.Extensions;
 //using FreeCourse.Web.Extensions;
 using FreeCourse.Web.Handler;
 using FreeCourse.Web.Models;
-using FreeCourse.Web.Services;
-using FreeCourse.Web.Services.Interfaces;
 using FreeCourse.Web.Validators;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
@@ -15,9 +13,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace FreeCourse.Web
 {
@@ -62,7 +57,7 @@ namespace FreeCourse.Web
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseExceptionHandler("/Home/Error");// for staging and Production
             }
             app.UseStaticFiles();
 

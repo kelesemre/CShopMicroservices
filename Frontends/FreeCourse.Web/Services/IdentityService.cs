@@ -76,6 +76,10 @@ namespace FreeCourse.Web.Services
             return token;
         }
 
+        /// <summary>
+        /// Refresh token ın gecerliliğini sonlandırır.
+        /// </summary>
+        /// <returns></returns>
         public async Task RevokeRefreshToken()
         {
             var disco = await _httpClient.GetDiscoveryDocumentAsync(new DiscoveryDocumentRequest
@@ -100,7 +104,7 @@ namespace FreeCourse.Web.Services
             await _httpClient.RevokeTokenAsync(tokenRevocationRequest);
         }
 
-        public async Task<Response<bool>> SignIn(SigninInput signinInput)
+        public async Task<Response<bool>> SignIn(SigninInput signinInput)  
         {
             /* 1-) reach to discovery endpoint
              * 2-) Get token info (passwordTokenRequest)

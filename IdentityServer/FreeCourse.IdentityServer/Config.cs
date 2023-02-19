@@ -23,8 +23,6 @@ namespace FreeCourse.IdentityServer
             new ApiResource("resource_payment") {  Scopes={ "payment_fullpermission" } },
             new ApiResource("resource_gateway") {  Scopes={ "gateway_fullpermission" } },
 
-
-
             new ApiResource(IdentityServerConstants.LocalApi.ScopeName)  // identity nin kendine istek yapabilmesi için
         };
 
@@ -55,10 +53,7 @@ namespace FreeCourse.IdentityServer
                 new ApiScope("order_fullpermission","Full permission for ORDER API"),
                 new ApiScope("payment_fullpermission","Full permission for PAYMENT API"),
                 new ApiScope("gateway_fullpermission","Full permission for Gateway"),
-
-
-
-                new ApiScope(IdentityServerConstants.LocalApi.ScopeName)
+                new ApiScope(IdentityServerConstants.LocalApi.ScopeName) // MVC içerisinden signup yapabilmek için de bunu vermemzi gerek
             };
         public static IEnumerable<Client> Clients =>
             new Client[] // Client represents app that request to IDS.Not a user. machine to machine.
@@ -69,7 +64,12 @@ namespace FreeCourse.IdentityServer
                     ClientSecrets= { new Secret("secret".Sha256()) },
                     ClientId="WebMvcClient",
                     AllowedGrantTypes = GrantTypes.ClientCredentials, // This grand types do not support to refresh token
-                    AllowedScopes= { "catalog_fullpermission", "photo_stock_fullpermission", "gateway_fullpermission", IdentityServerConstants.LocalApi.ScopeName }// alloweed scopes.
+                    AllowedScopes=
+                    { "catalog_fullpermission",
+                        "photo_stock_fullpermission",
+                        "gateway_fullpermission",
+                        IdentityServerConstants.LocalApi.ScopeName
+                    }// alloweed scopes.
                 },
                 new Client
                 {
@@ -87,7 +87,7 @@ namespace FreeCourse.IdentityServer
                                      IdentityServerConstants.StandardScopes.Profile,
                                      IdentityServerConstants.StandardScopes.OfflineAccess,
                                       "roles",
-                                      IdentityServerConstants.LocalApi.ScopeName
+                                      IdentityServerConstants.LocalApi.ScopeName // Identitynin kendisine istek yapabilmek için lazım. 
                     }, //refresh token
                     AccessTokenLifetime = 60*60, // 1 hour
                     RefreshTokenExpiration = TokenExpiration.Absolute,// Kesin bir tarih mi yoksa sliding mi

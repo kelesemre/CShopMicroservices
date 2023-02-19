@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace FreeCourse.IdentityServer.Services
 {
+    /// <summary>
+    /// Bu tiple bir grand type gelince validate eder. her durumda değil.
+    /// </summary>
     public class TokenExchangeExtensionGrantValidator: IExtensionGrantValidator
     {
         public string GrantType => "urn:ietf:params:oauth:grant-type:token-exchange";

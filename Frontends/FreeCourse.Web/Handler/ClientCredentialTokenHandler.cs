@@ -1,16 +1,16 @@
-﻿using FreeCourse.Web.Services.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using FreeCourse.Web.Exceptions;
+using FreeCourse.Web.Services.Interfaces;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
-using FreeCourse.Web.Exceptions;
 
 namespace FreeCourse.Web.Handler
 {
-    public class ClientCredentialTokenHandler: DelegatingHandler
+    /// <summary>
+    /// catalog sınıfında catalog Ms sine her bir istekte client credental için gerekli token elde ediliyor.
+    /// </summary>
+    public class ClientCredentialTokenHandler : DelegatingHandler
     {
         private readonly IClientCredentialTokenService _clientCredentialTokenService;
 
